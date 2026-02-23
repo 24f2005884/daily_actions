@@ -1,0 +1,30 @@
+name: Daily Auto Commit
+
+on:
+  schedule:
+    # Runs once per day at 09:17 UTC (specific time, NO wildcards)
+    - cron: "17 9 * * *"
+  workflow_dispatch:   # allows manual trigger for testing
+
+jobs:
+  commit:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup Git
+        run: |
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+
+      - name: Step for 24f2005884@ds.study.iitm.ac.in
+        run: echo "Triggering commit"
+
+      - name: Make daily commit
+        run: |
+          date >> daily-log.txt
+          git add daily-log.txt
+          git commit -m "Daily auto commit $(date)" || echo "No changes"
+          git push
